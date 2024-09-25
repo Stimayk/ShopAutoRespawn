@@ -14,7 +14,7 @@ namespace ShopAutoRespawn
         public override string ModuleName => "[SHOP] Auto Respawn";
         public override string ModuleDescription => "";
         public override string ModuleAuthor => "E!N";
-        public override string ModuleVersion => "1.0.0";
+        public override string ModuleVersion => "1.0.1";
 
         private IShopApi? SHOP_API;
         private const string CategoryName = "AutoRespawn";
@@ -118,7 +118,7 @@ namespace ShopAutoRespawn
             });
         }
 
-        public void OnClientBuyItem(CCSPlayerController player, int itemId, string categoryName, string uniqueName,
+        public HookResult OnClientBuyItem(CCSPlayerController player, int itemId, string categoryName, string uniqueName,
             int buyPrice, int sellPrice, int duration, int count)
         {
             if (TryGetConfig(uniqueName, out var config))
@@ -133,9 +133,11 @@ namespace ShopAutoRespawn
             {
                 Logger.LogError($"{uniqueName} has invalid or missing 'config' in config!");
             }
+
+            return HookResult.Continue;
         }
 
-        public void OnClientToggleItem(CCSPlayerController player, int itemId, string uniqueName, int state)
+        public HookResult OnClientToggleItem(CCSPlayerController player, int itemId, string uniqueName, int state)
         {
             if (state == 1 && TryGetConfig(uniqueName, out var config))
             {
@@ -149,15 +151,19 @@ namespace ShopAutoRespawn
             {
                 OnClientSellItem(player, itemId, uniqueName, 0);
             }
+
+            return HookResult.Continue;
         }
 
-        public void OnClientSellItem(CCSPlayerController player, int itemId, string uniqueName, int sellPrice)
+        public HookResult OnClientSellItem(CCSPlayerController player, int itemId, string uniqueName, int sellPrice)
         {
             playerAutoRespawns[player.Slot] = playerAutoRespawns[player.Slot] with
             {
                 Config = new Config(),
                 ItemId = 0
             };
+
+            return HookResult.Continue;
         }
 
         private void GeneralTimer()
