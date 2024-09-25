@@ -46,7 +46,7 @@ namespace ShopAutoRespawn
         {
             if (JsonAutoRespawn == null || SHOP_API == null) return;
 
-            SHOP_API.CreateCategory(CategoryName, "Àâòî ðåñïàâí");
+            SHOP_API.CreateCategory(CategoryName, "ÐÐ²Ñ‚Ð¾ Ñ€ÐµÑÐ¿Ð°Ð²Ð½");
 
             foreach (var item in JsonAutoRespawn.Properties().Where(p => p.Value is JObject))
             {
